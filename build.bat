@@ -1,6 +1,6 @@
 @ECHO off
-setlocal
-test&cls
+SETLOCAL
+CLS
 gcc --version
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
 SET "APP_FILE=APP.EXE"
@@ -83,6 +83,7 @@ GOTO %BUILD_CODE%
     DEL /s /q /f *.a
     DEL /s /q /f *.dll
     DEL /s /q /f *.exe    
+    CALL :BLANK_LINE
 EXIT /B 0
 
 :BLANK_LINE 

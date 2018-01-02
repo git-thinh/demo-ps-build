@@ -1,4 +1,8 @@
+#include <stdio.h>
 #include <iostream>
+
+#include "file1.cpp"
+
 using namespace std;
  
 int main() {
