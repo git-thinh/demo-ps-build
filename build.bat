@@ -4,6 +4,7 @@ test&cls
 gcc --version
 set "beginComment=goto :endComment"
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::
 %beginComment%
 echo.
 
@@ -22,6 +23,7 @@ echo.
 echo.
 echo.
 :endComment
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
 echo. 
 echo [ === CLEAN LIB === ] 
@@ -39,11 +41,11 @@ echo [ === BUILD ... === ]
 
 ::--------------------------------------------------
 ::[CASE 001]:
-::g++ -o run.exe hello.cpp
+g++ -o app.exe main.cpp
 
 ::--------------------------------------------------
 ::[CASE 002]:
-g++ -Wall -g -o app.exe main.cpp
+::g++ -Wall -g -o app.exe main.cpp
     ::// -o: specifies the output executable filename.
     ::// -Wall: prints "all" warning messages.
     ::// -g: generates additional symbolic debuggging information for use with gdb debugger.
@@ -55,9 +57,9 @@ g++ -Wall -g -o app.exe main.cpp
     ::// You may separate compile and link in two steps as follows:
 
     ::// Compile-only with -c option
-g++ -c -Wall -g main.cpp
+::g++ -c -Wall -g main.cpp
     ::// Link object file(s) into an executable
-g++ -g -o app.exe main.o
+::g++ -g -o app.exe main.o
 
     ::// The options are:
     ::// -c: compile into object file "Hello.o". By default, the object file has the same name as 
