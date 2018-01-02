@@ -1,22 +1,40 @@
-# Specify compiler
-CC=gcc
+# Nmake macros for building Windows 32-Bit apps
 
-# Specify linker
-LINK=gcc
+!include <win32.mak>
 
-.PHONY : all
-all : app
+all: $(OUTDIR) $(OUTDIR)\demo.exe $(OUTDIR)\select.dll
 
-# Link the object files into a binary
-app : main.o
-	$(LINK) -o app.exe main.o -lstdc++
+#----- If OUTDIR does not exist, then create directory
+$(OUTDIR) :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir $(OUTDIR)
 
-# Compile the source files into object files
-main.o : main.cpp
-	$(CC) -c main.cpp -o main.o
+# Update the object files if necessary
 
-# Clean target
-.PHONY : clean
-clean :
-	rm main.o app.exe
+$(OUTDIR)\demo.obj: demo.c
+    $(cc) $(cflags) $(cvarsdll) $(cdebug) /Fo"$(OUTDIR)\\" /Fd"$(OUTDIR)\\" demo.c
 
+$(OUTDIR)\select.obj: select.c
+    $(cc) $(cflags) $(cvarsdll) $(cdebug) /Fo"$(OUTDIR)\\" /Fd"$(OUTDIR)\\" select.c
+
+# Update the resources if necessary
+
+$(OUTDIR)\demo.res: demo.rc demo.h
+    $(rc) $(rcflags) $(rcvars) /fo$(OUTDIR)\demo.res  demo.rc
+
+# Update the dynamic link library
+
+$(OUTDIR)\select.dll: $(OUTDIR)\select.obj select.def
+    $(link) $(linkdebug) $(dlllflags)   -out:$(OUTDIR)\select.dll /DEF:select.def $(OUTDIR)\select.obj $(guilibsdll)
+    mt -manifest $(OUTDIR)\Select.dll.manifest -outputresource:$(OUTDIR)\Select.dll;2
+
+
+# Update the executable file if necessary.
+# If so, add the resource back in.
+
+$(OUTDIR)\demo.exe: $(OUTDIR)\demo.obj $(OUTDIR)\select.dll $(OUTDIR)\demo.res
+    $(link) $(linkdebug) $(guiflags) -out:$(OUTDIR)\demo.exe $(OUTDIR)\demo.obj $(OUTDIR)\select.lib $(OUTDIR)\demo.res $(guilibsdll)
+
+#--------------------- Clean Rule --------------------------------------------------------
+# Rules for cleaning out those old files
+clean:
+        $(CLEANUP)

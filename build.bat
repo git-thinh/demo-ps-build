@@ -113,20 +113,36 @@ GOTO %BUILD_CODE%
     g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdll.o testdll.cpp
     g++ -shared -g -o libtestdll.dll testdll.o testdll.def
     g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdllcall.o testdllcall.cpp
-    g++ -g -o %APP_FILE% testdllcall.o
+    
+    ::g++ -g -o %APP_FILE% testdllcall.o -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic
+    ::g++ -g -o %APP_FILE% testdllcall.o -static-libstdc++ -static-libgcc
+
+    g++ -static-libgcc -static-libstdc++ -Wl,-s -Wl,-subsystem,windows -mthreads -o %APP_FILE% testdllcall.o -lmingw32 -LC:/Qt/542static/qtbase/lib -lqtmain -lQt5OpenGL -lQt5Widgets -LC:/Qt/542static/qtbase/plugins/platforms -lqwindows -lwinspool -lshlwapi -lQt5PlatformSupport -LC:/Qt/542static/qtbase/plugins/imageformats -lqdds -lqicns -lqico -lqjp2 -lqmng -lqtga -lqtiff -lqwbmp -lqwebp -lQt5Gui -lcomdlg32 -loleaut32 -limm32 -lwinmm -lglu32 -lopengl32 -lgdi32 -lqtharfbuzzng -lQt5Core -lole32 -luuid -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lmpr -lz
 
     CALL :BLANK_LINE
     CALL %APP_FILE%
     GOTO :BUILD_END
 :BUILD_008
     CALL :CLEAN_TARGET    
-    
+
+    gcc -c -o add_basic.o add_basic.c
+    gcc -o add_basic.dll -s -shared add_basic.o -Wl,--subsystem,windows    
+
+    gcc -c -o addtest_basic.o addtest_basic.c
+    gcc -o %APP_FILE% -s addtest_basic.o -L. -ladd_basic
+
     CALL :BLANK_LINE
     CALL %APP_FILE%
     GOTO :BUILD_END
 :BUILD_009
     CALL :CLEAN_TARGET    
-    
+
+    gcc -c -o add.o add.c -D ADD_EXPORTS
+    gcc -o add.dll add.o -s -shared -Wl,--subsystem,windows 
+
+    gcc -c -o addtest.o addtest.c
+    gcc -o %APP_FILE% -s addtest.o -L. -ladd 
+
     CALL :BLANK_LINE
     CALL %APP_FILE%
     GOTO :BUILD_END
