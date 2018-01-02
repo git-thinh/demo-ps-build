@@ -3,7 +3,7 @@ SETLOCAL
 CLS
 gcc --version
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
-SET "APP_FILE=APP.EXE"
+SET "APP_FILE=APP.exe"
 SET "PATH_ROOT=%~p1"
 SET "CODE=%~n1"
 SET "BUILD_CODE=BUILD_%CODE%"
@@ -22,15 +22,21 @@ GOTO %BUILD_CODE%
     DEL /s /q /f *.o
     
     ::g++ -c ___msgPublish.hpp -o ___msgPublish.o -std=c++11 -Wall -Wextra
-    ::g++ -c ___msgSubscribe.h -o ___msgSubscribe.o -std=c++11 -Wall -Wextra
-    ::g++ -o ___msgPS.dll ___msgSubscribe.o -s -shared -Wl,--subsystem,windows
+    ::g++ -c ___msgPublish.hpp -o ___msgPublish.o
+    ::g++ -c ___msgSubscribe.h -o ___msgSubscribe.o    
+    ::g++ ___msgPublish.o ___msgSubscribe.o -o ___msgPS.o    
 
-    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdll.o testdll.cpp
+    ::g++ -c -fPIC ___msgPublish.hpp ___msgSubscribe.h
+    ::g++ file1.o file2.o file3.o -shared -o libProject.so -Wl,--whole-archive libAlgatorc.a -Wl,--no-whole-archive
+    
+    ::g++ -fPIC ___msgPublish.hpp ___msgSubscribe.h -shared -o ___msgPS.o -Wl,--whole-archive -lAlgatorc -Wl,--no-whole-archive
+    ::g++ -fPIC ___msgPublish.hpp ___msgSubscribe.h -shared -o ___msgPS.o -Wl,--subsystem,windows--whole-archive -lAlgatorc -Wl,--no-whole-archive
+  
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdll.o shared.cpp
     g++ -shared -g -o libtestdll.dll testdll.o testdll.def
-    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdllcall.o testdllcall.cpp
-    g++ -g -o testdllcall.exe testdllcall.o
-
-    CALL testdllcall.exe
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdllcall.o shared_main.cpp
+    g++ -g -o %APP_FILE% testdllcall.o
+    CALL %APP_FILE%
 
     GOTO :BUILD_END
 :BUILD_001    
@@ -104,6 +110,11 @@ GOTO %BUILD_CODE%
 :BUILD_007
     CALL :CLEAN_TARGET    
     
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdll.o testdll.cpp
+    g++ -shared -g -o libtestdll.dll testdll.o testdll.def
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdllcall.o testdllcall.cpp
+    g++ -g -o %APP_FILE% testdllcall.o
+
     CALL :BLANK_LINE
     CALL %APP_FILE%
     GOTO :BUILD_END
