@@ -16,6 +16,23 @@ CALL :BLANK_LINE
 ::IF "%CODE%"=="001" GOTO BUILD_001
 GOTO %BUILD_CODE%
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
+:BUILD_
+    CALL :BLANK_LINE
+    
+    DEL /s /q /f *.o
+    
+    ::g++ -c ___msgPublish.hpp -o ___msgPublish.o -std=c++11 -Wall -Wextra
+    ::g++ -c ___msgSubscribe.h -o ___msgSubscribe.o -std=c++11 -Wall -Wextra
+    ::g++ -o ___msgPS.dll ___msgSubscribe.o -s -shared -Wl,--subsystem,windows
+
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdll.o testdll.cpp
+    g++ -shared -g -o libtestdll.dll testdll.o testdll.def
+    g++ -O0 -g3 -Wall -c -fmessage-length=0 -o testdllcall.o testdllcall.cpp
+    g++ -g -o testdllcall.exe testdllcall.o
+
+    CALL testdllcall.exe
+
+    GOTO :BUILD_END
 :BUILD_001    
     CALL :CLEAN_TARGET
     :: Compile the source files into object files
@@ -73,10 +90,42 @@ GOTO %BUILD_CODE%
     g++ -c file1.cpp
     g++ -c file2.cpp
     g++ -o %APP_FILE% file1.o file2.o    
-
     CALL :BLANK_LINE
     CALL %APP_FILE%
     GOTO :BUILD_END
+:BUILD_006
+    CALL :CLEAN_TARGET    
+    
+    ::test mutex in MinGW on windows
+    g++ -o tests.exe tests.cpp -std=c++11 -Wall -Wextra
+    call tests.exe
+    
+    GOTO :BUILD_END
+:BUILD_007
+    CALL :CLEAN_TARGET    
+    
+    CALL :BLANK_LINE
+    CALL %APP_FILE%
+    GOTO :BUILD_END
+:BUILD_008
+    CALL :CLEAN_TARGET    
+    
+    CALL :BLANK_LINE
+    CALL %APP_FILE%
+    GOTO :BUILD_END
+:BUILD_009
+    CALL :CLEAN_TARGET    
+    
+    CALL :BLANK_LINE
+    CALL %APP_FILE%
+    GOTO :BUILD_END
+:BUILD_010
+    CALL :CLEAN_TARGET    
+    
+    CALL :BLANK_LINE
+    CALL %APP_FILE%
+    GOTO :BUILD_END
+::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::
 :CLEAN_TARGET
     DEL /s /q /f *.o
@@ -85,12 +134,14 @@ GOTO %BUILD_CODE%
     DEL /s /q /f *.exe    
     CALL :BLANK_LINE
 EXIT /B 0
-
 :BLANK_LINE 
     ECHO.
     ECHO.
     ECHO.
 EXIT /B 0
-
+:BUILD_CLEAN
+    CALL :CLEAN_TARGET
+:BUILD_CLEAR 
+    CALL :CLEAN_TARGET
 :BUILD_END
     CALL :BLANK_LINE

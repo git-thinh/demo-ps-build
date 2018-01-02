@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "mutex": "cpp",
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "thread": "cpp",
+        "memory": "cpp"
+    }
+}
