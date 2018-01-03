@@ -1,4 +1,4 @@
-﻿
+/*
 #ifndef _____MSGSUBSCRIBE
 #define _____MSGSUBSCRIBE
 
@@ -198,3 +198,4 @@ public:
 };
 
 #endif // !_____MSGSUBSCRIBE
+*/

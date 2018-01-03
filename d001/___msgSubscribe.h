@@ -1,11 +1,10 @@
-﻿
 #ifndef _____MSG_SUBSCRIBE_H
 #define _____MSG_SUBSCRIBE_H
 
-#include "mingw.thread.h"
+//#include "mingw.thread.h"
 #include <mutex>
-#include "mingw.mutex.h"
-#include "mingw.condition_variable.h"
+//#include "mingw.mutex.h"
+//#include "mingw.condition_variable.h"
 
 #include <vector>
 #include <thread>

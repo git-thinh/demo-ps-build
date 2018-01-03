@@ -1,4 +1,4 @@
-﻿
+/*
 #ifndef _____MSGSUBSCRIBE
 #define _____MSGSUBSCRIBE
 
@@ -199,3 +199,4 @@ public:
 #pragma endregion
 
 #endif // !_____MSGSUBSCRIBE
+*/
